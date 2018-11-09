@@ -10,7 +10,12 @@ public class RestartServiceBroadcastReciever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i("Service Stops", "Trying too restart Service");
-        Toast.makeText(context, "Restarting JobService", Toast.LENGTH_SHORT).show();
-        context.startService(new Intent(context, JobSchedulerService.class));
+//        context.startService(new Intent(context, JobSchedulerService.class));
+        Intent i = new Intent(context,MainActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
     }
+
+
+
 }

@@ -73,6 +73,14 @@ public class JobSchedulerService extends JobService {
                         saveData(packageData.getPackageName());
                         Log.e("TopPackage Name", topPackageName);
                         Toast.makeText(this, packageData.getPackageName(), Toast.LENGTH_SHORT).show();
+
+                        //WORKING
+//                        if(!topPackageName.contentEquals("com.prototype.project.testrun66") && !topPackageName.contentEquals("com.bbk.launcher2") ){
+//                            Toast.makeText(this, "Not main App", Toast.LENGTH_SHORT).show();
+//                            Intent intent = new Intent(JobSchedulerService.this,LockActivity.class);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(intent);
+//                        }
                     }
                 }
             }
@@ -106,9 +114,10 @@ public class JobSchedulerService extends JobService {
     };
 
 
-
-
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }
 
 
