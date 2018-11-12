@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -53,7 +52,7 @@ public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdap
         holder.mTextViewPackage.setText(packageName); // Set the current app package name
         holder.mImageViewIcon.setImageDrawable(icon); // Set the current app icon
         holder.mAppSelect.setChecked(mDataSet.get(position).isSelected());
-        holder.mBlock.setOnClickListener();
+
 
         holder.mItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,18 +60,11 @@ public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdap
                 mDataSet.get(position).setSelected(!mDataSet.get(position).isSelected());
                 InstalledAppsAdapter.this.notifyDataSetChanged();
 
-                appsManager.setPreferences(MyApp.getAppContext(),KEY_TEXT,packageName);
-                packageData.addAppToBlock(appsManager.getPreferences(MyApp.getAppContext(),KEY_TEXT));
+                AppsManager.setPreferences(MyApp.getAppContext(), KEY_TEXT, packageName);
+                packageData.addAppToBlock(AppsManager.getPreferences(MyApp.getAppContext(), KEY_TEXT));
 
-                Toast.makeText(mContext.getApplicationContext(),"package name: "+ appsManager.getPreferences(MyApp.getAppContext(),KEY_TEXT) +
+                Toast.makeText(mContext.getApplicationContext(), "package name: " + AppsManager.getPreferences(MyApp.getAppContext(), KEY_TEXT) +
                         " save to shared pref", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        holder.mBlock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                blockApp.startJob();
             }
         });
     }
@@ -94,18 +86,18 @@ public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdap
         public ImageView mImageViewIcon;
         public CheckBox mAppSelect;
         public RelativeLayout mItem;
-        public Button mBlock;
+
 
         public ViewHolder(View v) {
             super(v);
 
             // Get the widgets reference from custom layout
-            mTextViewLabel = (TextView) v.findViewById(R.id.Apk_Name);
-            mTextViewPackage = (TextView) v.findViewById(R.id.Apk_Package_Name);
-            mImageViewIcon = (ImageView) v.findViewById(R.id.packageImage);
-            mAppSelect = (CheckBox) v.findViewById(R.id.appSelect);
-            mItem = (RelativeLayout) v.findViewById(R.id.item);
-            mBlock = (Button) v.findViewById(R.id.btnBlock);
+            mTextViewLabel = v.findViewById(R.id.Apk_Name);
+            mTextViewPackage = v.findViewById(R.id.Apk_Package_Name);
+            mImageViewIcon = v.findViewById(R.id.packageImage);
+            mAppSelect = v.findViewById(R.id.appSelect);
+            mItem = v.findViewById(R.id.item);
+
 
 
             if(mAppSelect.isChecked()) {

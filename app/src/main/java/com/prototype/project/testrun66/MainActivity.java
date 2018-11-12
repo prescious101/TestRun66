@@ -1,9 +1,7 @@
 package com.prototype.project.testrun66;
 
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
 import android.app.usage.UsageStatsManager;
-import android.content.ComponentName;
+import android.view.View;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -13,14 +11,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.prototype.project.testrun66.Model.AppsManager;
 import com.prototype.project.testrun66.Model.BlockApp;
 import com.prototype.project.testrun66.Model.MyApp;
 import com.prototype.project.testrun66.Model.PackageData;
-import com.prototype.project.testrun66.R;
-import com.prototype.project.testrun66.Service.JobSchedulerService;
 import com.prototype.project.testrun66.View.InstalledAppsAdapter;
 
 import java.util.ArrayList;
@@ -36,11 +33,14 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<PackageData> installedApps;
     private AppsManager appManager;
     private BlockApp blockApp = new BlockApp();
+//    private Button mBlock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initializations();
 
         if (Build.VERSION.SDK_INT >= 21) {
             Context context = getApplicationContext();
@@ -54,8 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
-        }initializations();
-
+        }
         Toast.makeText(this, String.valueOf(blockApp.isJobSchedulerRunning(MyApp.getAppContext())), Toast.LENGTH_SHORT).show();
     }
 
@@ -68,13 +67,15 @@ public class MainActivity extends AppCompatActivity {
         installedApps = appManager.getApps();
         mAdapter=new InstalledAppsAdapter(getApplicationContext(),installedApps);
         mRecyclerView.setAdapter(mAdapter);
+//        mBlock = (Button) findViewById(R.id.btnBlock);
+    }
+
+    public void blockApp(View v) {
+        blockApp.startJob();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: App Started");
-    }
+    protected void onStart() { super.onStart(); Log.d(TAG, "onStart: App Started"); }
 
     @Override
     protected void onPause() {
