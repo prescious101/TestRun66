@@ -6,29 +6,42 @@ import android.app.usage.UsageStatsManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
     private static  final  String TAG = "MainActivity";
     private PackageData packageData = new PackageData();
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
+    private ArrayList<PackageData> installedApps;
+    // List<AppInfo>list= new ArrayList<AppInfo>();
+    private AppsManager appManager;
+    private final String baseURL = "http://192.168.50.48/post.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         if (Build.VERSION.SDK_INT >= 21) {
             Context context = getApplicationContext();
@@ -39,13 +52,28 @@ public class MainActivity extends AppCompatActivity {
             if (stats == null || stats.isEmpty()) {
                 Intent intent = new Intent();
                 intent.setAction(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         }startJob();
 
-        TextView packageStatus = findViewById(R.id.tvPackageStatus);
-        packageStatus.setText(packageData.getPackageName());
+        initializations();
     }
+
+
+    public void initializations(){
+        installedApps = new ArrayList<PackageData>();
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycleView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        appManager = new AppsManager(this);
+        installedApps = appManager.getApps();
+
+
+        mAdapter=new InstalledAppsAdapter(getApplicationContext(),installedApps);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
 
 
     public void startJob(){
@@ -68,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Job Failed... Job not scheduled ");
         }
     }
-
 
 
     @Override

@@ -24,7 +24,7 @@ public class JobSchedulerService extends JobService {
 
     private static final String TAG = "JobScheduleService";
     private static final String SHARED_PREF = "SharedPreference";
-    private static final String TEXT = "TEXT";
+    private static final String KEY_TEXT = "TEXT";
 
     PackageData packageData = new PackageData();
     private Handler mHandler = new Handler(Looper.getMainLooper());
@@ -70,9 +70,27 @@ public class JobSchedulerService extends JobService {
                     if(topPackageName != null) {
                         topPackageName = mySortedMap.get(mySortedMap.lastKey()).getPackageName();
                         packageData.setPackageName(topPackageName);
-                        saveData(packageData.getPackageName());
                         Log.e("TopPackage Name", topPackageName);
-                        Toast.makeText(this, packageData.getPackageName(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(this, packageData.getPackageName(), Toast.LENGTH_SHORT).show();
+                        {
+                            Log.d(TAG, "getTopActivityFromLolipopOnwards: "+packageData);
+                        }
+
+                        SharedPreferences prefs = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
+                        String restoredText = prefs.getString("text", null);
+                        if (restoredText != null) {
+                            String name = prefs.getString("name", "No name defined");//"No name defined" is the default value.
+                        }
+
+                        if(packageData.getPreferences(MyApp.getAppContext(),KEY_TEXT)!=null){
+                            if(topPackageName.contentEquals(packageData.getPreferences(MyApp.getAppContext(),KEY_TEXT))) {
+                                Toast.makeText(this, "App Block SARRY", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(JobSchedulerService.this, LockActivity.class);
+                                intent.putExtra(KEY_TEXT,packageData.getPreferences(MyApp.getAppContext(),KEY_TEXT));
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        }
 
                         //WORKING
 //                        if(!topPackageName.contentEquals("com.prototype.project.testrun66") && !topPackageName.contentEquals("com.bbk.launcher2") ){
@@ -88,11 +106,11 @@ public class JobSchedulerService extends JobService {
     }
 
 
-    public void saveData(String topPackagename){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF,MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(TEXT,topPackagename);
-    }
+//    public void isBlock(String topPackagename){
+//        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF,MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putString(TEXT,topPackagename);
+//    }
 
     private Runnable mJobStarted = new Runnable() {
         @Override
