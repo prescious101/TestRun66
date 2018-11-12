@@ -29,7 +29,6 @@ public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdap
     private PackageData packageData = new PackageData();
     private BlockApp blockApp = new BlockApp();
 
-
     public InstalledAppsAdapter(Context context, ArrayList<PackageData> list) {
         mContext = context;
         mDataSet =  list;
@@ -53,7 +52,6 @@ public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdap
         holder.mImageViewIcon.setImageDrawable(icon); // Set the current app icon
         holder.mAppSelect.setChecked(mDataSet.get(position).isSelected());
 
-
         holder.mItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,15 +67,11 @@ public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdap
         });
     }
 
-
     @Override
     public int getItemCount() {
         // Count the installed apps
         return mDataSet.size();
     }
-
-
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -86,7 +80,6 @@ public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdap
         public ImageView mImageViewIcon;
         public CheckBox mAppSelect;
         public RelativeLayout mItem;
-
 
         public ViewHolder(View v) {
             super(v);
@@ -97,8 +90,6 @@ public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdap
             mImageViewIcon = v.findViewById(R.id.packageImage);
             mAppSelect = v.findViewById(R.id.appSelect);
             mItem = v.findViewById(R.id.item);
-
-
 
             if(mAppSelect.isChecked()) {
               mAppSelect.setChecked(true);

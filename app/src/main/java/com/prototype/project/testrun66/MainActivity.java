@@ -27,13 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static  final  String TAG = "MainActivity";
     private PackageData packageData = new PackageData();
-
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private ArrayList<PackageData> installedApps;
     private AppsManager appManager;
     private BlockApp blockApp = new BlockApp();
-//    private Button mBlock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +65,9 @@ public class MainActivity extends AppCompatActivity {
         installedApps = appManager.getApps();
         mAdapter=new InstalledAppsAdapter(getApplicationContext(),installedApps);
         mRecyclerView.setAdapter(mAdapter);
-//        mBlock = (Button) findViewById(R.id.btnBlock);
     }
 
-    public void blockApp(View v) {
-        blockApp.startJob();
-    }
+    public void blockApp(View v) { blockApp.startJob();}
 
     @Override
     protected void onStart() { super.onStart(); Log.d(TAG, "onStart: App Started"); }
