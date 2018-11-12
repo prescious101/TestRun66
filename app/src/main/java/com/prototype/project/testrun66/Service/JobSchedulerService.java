@@ -1,7 +1,6 @@
-package com.prototype.project.testrun66;
+package com.prototype.project.testrun66.Service;
 
 import android.app.job.JobParameters;
-import android.app.job.JobScheduler;
 import android.app.job.JobService;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
@@ -16,6 +15,11 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.prototype.project.testrun66.LockActivity;
+import com.prototype.project.testrun66.Model.AppsManager;
+import com.prototype.project.testrun66.Model.MyApp;
+import com.prototype.project.testrun66.Model.PackageData;
+
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -27,6 +31,7 @@ public class JobSchedulerService extends JobService {
     private static final String KEY_TEXT = "TEXT";
 
     PackageData packageData = new PackageData();
+    AppsManager appsManager = new AppsManager();
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
 
@@ -71,6 +76,7 @@ public class JobSchedulerService extends JobService {
                         topPackageName = mySortedMap.get(mySortedMap.lastKey()).getPackageName();
                         packageData.setPackageName(topPackageName);
                         Log.e("TopPackage Name", topPackageName);
+
 //                        Toast.makeText(this, packageData.getPackageName(), Toast.LENGTH_SHORT).show();
                         {
                             Log.d(TAG, "getTopActivityFromLolipopOnwards: "+packageData);
@@ -82,23 +88,17 @@ public class JobSchedulerService extends JobService {
                             String name = prefs.getString("name", "No name defined");//"No name defined" is the default value.
                         }
 
-                        if(packageData.getPreferences(MyApp.getAppContext(),KEY_TEXT)!=null){
-                            if(topPackageName.contentEquals(packageData.getPreferences(MyApp.getAppContext(),KEY_TEXT))) {
-                                Toast.makeText(this, "App Block SARRY", Toast.LENGTH_SHORT).show();
+                        if(appsManager.getPreferences(MyApp.getAppContext(),KEY_TEXT)!=null){
+                            if(topPackageName.contentEquals(appsManager.getPreferences(MyApp.getAppContext(),KEY_TEXT))) {
+                                Toast.makeText(this, "App BlockApp SARRY", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(JobSchedulerService.this, LockActivity.class);
-                                intent.putExtra(KEY_TEXT,packageData.getPreferences(MyApp.getAppContext(),KEY_TEXT));
+                                intent.putExtra(KEY_TEXT,appsManager.getPreferences(MyApp.getAppContext(),KEY_TEXT));
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                             }
                         }
 
-                        //WORKING
-//                        if(!topPackageName.contentEquals("com.prototype.project.testrun66") && !topPackageName.contentEquals("com.bbk.launcher2") ){
-//                            Toast.makeText(this, "Not main App", Toast.LENGTH_SHORT).show();
-//                            Intent intent = new Intent(JobSchedulerService.this,LockActivity.class);
-//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            startActivity(intent);
-//                        }
+
                     }
                 }
             }
@@ -106,11 +106,7 @@ public class JobSchedulerService extends JobService {
     }
 
 
-//    public void isBlock(String topPackagename){
-//        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF,MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString(TEXT,topPackagename);
-//    }
+
 
     private Runnable mJobStarted = new Runnable() {
         @Override
@@ -139,7 +135,21 @@ public class JobSchedulerService extends JobService {
 }
 
 
+//WORKING DO NOT DELETE
+//                        if(!topPackageName.contentEquals("com.prototype.project.testrun66") && !topPackageName.contentEquals("com.bbk.launcher2") ){
+//                            Toast.makeText(this, "Not main App", Toast.LENGTH_SHORT).show();
+//                            Intent intent = new Intent(JobSchedulerService.this,LockActivity.class);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(intent);
+//                        }
 
+
+
+//    public void isBlock(String topPackagename){
+//        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF,MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putString(TEXT,topPackagename);
+//    }
 
 // failed test to send open custom app when opening an app
 //

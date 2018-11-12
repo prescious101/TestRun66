@@ -1,4 +1,4 @@
-package com.prototype.project.testrun66;
+package com.prototype.project.testrun66.Service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
-import static com.prototype.project.testrun66.MyApp.CHANNEL_ID;
+import com.prototype.project.testrun66.MainActivity;
+import com.prototype.project.testrun66.R;
+
+import static com.prototype.project.testrun66.Model.MyApp.CHANNEL_ID;
 
 
 public class ForegroundNotificationService extends Service {

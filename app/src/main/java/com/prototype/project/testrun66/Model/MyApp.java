@@ -1,4 +1,4 @@
-package com.prototype.project.testrun66;
+package com.prototype.project.testrun66.Model;
 
 import android.app.Application;
 import android.app.NotificationChannel;
@@ -23,8 +23,7 @@ public class MyApp extends Application {
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID,
                     "Example Service Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
+                    NotificationManager.IMPORTANCE_DEFAULT);
 
             NotificationManager manager = getSystemService(NotificationManager.class);
             if (manager != null) {

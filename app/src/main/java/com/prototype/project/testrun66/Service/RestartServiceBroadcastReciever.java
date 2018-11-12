@@ -1,10 +1,11 @@
-package com.prototype.project.testrun66;
+package com.prototype.project.testrun66.Service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.prototype.project.testrun66.MainActivity;
 
 public class RestartServiceBroadcastReciever extends BroadcastReceiver {
     @Override
@@ -15,7 +16,4 @@ public class RestartServiceBroadcastReciever extends BroadcastReceiver {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
     }
-
-
-
 }

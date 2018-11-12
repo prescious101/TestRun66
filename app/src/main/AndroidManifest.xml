@@ -12,7 +12,7 @@
 
 
     <application
-        android:name=".MyApp"
+        android:name=".Model.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -29,7 +29,7 @@
         </activity>
         <activity android:name=".LockActivity"/>
 
-        <receiver android:name=".RestartServiceBroadcastReciever"
+        <receiver android:name=".Service.RestartServiceBroadcastReciever"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.restartService.jobSchedulerService" />
@@ -37,10 +37,10 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".JobSchedulerService"
+        <service android:name=".Service.JobSchedulerService"
             android:permission="android.permission.BIND_JOB_SERVICE">
         </service>
-        <service android:name=".ForegroundNotificationService"/>
+        <service android:name=".Service.ForegroundNotificationService"/>
 
     </application>
 

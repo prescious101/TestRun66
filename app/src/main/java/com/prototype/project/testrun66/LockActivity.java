@@ -2,9 +2,10 @@ package com.prototype.project.testrun66;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.prototype.project.testrun66.Model.MyApp;
 
 public class LockActivity extends Activity {
     private static final String KEY_TEXT = "TEXT";

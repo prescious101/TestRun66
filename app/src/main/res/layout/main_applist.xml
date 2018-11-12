@@ -41,7 +41,6 @@
                 android:layout_toEndOf="@id/packageImage"
                 android:layout_toRightOf="@id/packageImage"
                 android:textColor="#795548"
-
                 />
 
             <CheckBox

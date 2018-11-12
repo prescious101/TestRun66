@@ -1,11 +1,20 @@
-package com.prototype.project.testrun66;
+package com.prototype.project.testrun66.Model;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.prototype.project.testrun66.Model.PackageData;
+import com.prototype.project.testrun66.R;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,9 +22,16 @@ import java.util.List;
 
 public class AppsManager {
 
+
+    private static final String SHARED_PREF = "SharedPreference";
+    private static final String KEY_TEXT_ARRAYLIST = "ARRAYLIST ";
+
+    //    private PackageData appInfo;
     private Context mContext;
-    private PackageData appInfo;
     private ArrayList<PackageData> myApps;
+
+    public AppsManager() {
+    }
 
     public AppsManager(Context c) {
         mContext = c;
@@ -25,6 +41,8 @@ public class AppsManager {
         loadApps();
         return myApps;
     }
+
+
     private void loadApps() {
 
         List<ApplicationInfo> packages = mContext.getPackageManager().getInstalledApplications(0);
@@ -76,5 +94,49 @@ public class AppsManager {
         }
         return label;
     }
+
+    public void saveBlockArrayList(ArrayList<String> list){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyApp.getAppContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString(KEY_TEXT_ARRAYLIST, json);
+        editor.apply();     // This line is IMPORTANT !!!
+    }
+
+    public ArrayList<String> getBlockArrayList(String key){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyApp.getAppContext());
+        Gson gson = new Gson();
+        String json = prefs.getString(key, null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+
+
+    public static String getPreferences(Context context, String key) {
+
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        String json = appSharedPrefs.getString(key, "");
+        if (TextUtils.isEmpty(json)) {
+            return null;
+        }
+        return json;
+    }
+
+    public static void setPreferences(Context context, String key, String value) {
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+        prefsEditor.putString(key, value);
+        prefsEditor.apply();
+    }
+
+
+
+
+
+
 
 }
