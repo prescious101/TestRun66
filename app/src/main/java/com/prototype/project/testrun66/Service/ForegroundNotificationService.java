@@ -31,7 +31,7 @@ public class ForegroundNotificationService extends Service {
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Example Service")
-                .setContentText(packageName)
+                .setContentText(packageName+"\n")
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentIntent(pendingIntent)
                 .build();

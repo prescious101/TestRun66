@@ -7,6 +7,8 @@ import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
@@ -15,11 +17,13 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.reflect.TypeToken;
 import com.prototype.project.testrun66.LockActivity;
 import com.prototype.project.testrun66.Model.AppsManager;
 import com.prototype.project.testrun66.Model.MyApp;
 import com.prototype.project.testrun66.Model.PackageData;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -28,13 +32,11 @@ public class JobSchedulerService extends JobService {
 
     private static final String TAG = "JobScheduleService";
     private static final String SHARED_PREF = "SharedPreference";
-    private static final String KEY_TEXT = "TEXT";
+    private static final String KEY_TEXT_ARRAYLIST = "ARRAYLIST";
 
     PackageData packageData = new PackageData();
     AppsManager appsManager = new AppsManager();
     private Handler mHandler = new Handler(Looper.getMainLooper());
-
-
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
@@ -72,48 +74,42 @@ public class JobSchedulerService extends JobService {
                 if (!mySortedMap.isEmpty()) {
                     topPackageName = mySortedMap.get(mySortedMap.lastKey()).getPackageName();
 
-                    if(topPackageName != null) {
+                    if (topPackageName != null) {
                         topPackageName = mySortedMap.get(mySortedMap.lastKey()).getPackageName();
                         packageData.setPackageName(topPackageName);
                         Log.e("TopPackage Name", topPackageName);
-
 //                        Toast.makeText(this, packageData.getPackageName(), Toast.LENGTH_SHORT).show();
                         {
-                            Log.d(TAG, "getTopActivityFromLolipopOnwards: "+packageData);
+                            Log.d(TAG, "getTopActivityFromLolipopOnwards: " + packageData);
                         }
-
                         SharedPreferences prefs = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
                         String restoredText = prefs.getString("text", null);
                         if (restoredText != null) {
                             String name = prefs.getString("name", "No name defined");//"No name defined" is the default value.
                         }
 
-                        if(appsManager.getPreferences(MyApp.getAppContext(),KEY_TEXT)!=null){
-                            if(topPackageName.contentEquals(appsManager.getPreferences(MyApp.getAppContext(),KEY_TEXT))) {
-                                Toast.makeText(this, "App BlockApp SARRY", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(JobSchedulerService.this, LockActivity.class);
-                                intent.putExtra(KEY_TEXT,appsManager.getPreferences(MyApp.getAppContext(),KEY_TEXT));
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                        ArrayList<String> blacklistedApps = appsManager.getArrayList(KEY_TEXT_ARRAYLIST);
+                        if (blacklistedApps != null) {
+                                if (blacklistedApps.contains(topPackageName)) {
+                                    Toast.makeText(this, "App BlockApp SARRY", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(JobSchedulerService.this, LockActivity.class);
+                                    intent.putExtra(KEY_TEXT_ARRAYLIST, appsManager.getPreferences(MyApp.getAppContext(), KEY_TEXT_ARRAYLIST));
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
                             }
-                        }
-
-
+                        } else
+                            Log.d(TAG, "getTopActivityFromLolipopOnwards: NULL");
                     }
                 }
             }
         }
     }
 
-
-
-
     private Runnable mJobStarted = new Runnable() {
         @Override
         public void run() {
-            String packageName;
             getTopActivityFromLolipopOnwards();
-            packageName = packageData.getPackageName();
+            String packageName = packageData.getPackageName();
 
             if(packageName!=null) {
                 Intent serviceIntent = new Intent(JobSchedulerService.this, ForegroundNotificationService.class);
@@ -122,11 +118,11 @@ public class JobSchedulerService extends JobService {
                 Log.d(TAG, "onStartJob: Notification start");
                 mHandler.postDelayed(this, 1000);
             }else{
-                mHandler.postDelayed(this,0);
+                mHandler.postDelayed(this,1000);
+                Log.d(TAG, "run: Null");
             }
         }
     };
-
 
     @Override
     public void onDestroy() {
@@ -134,6 +130,40 @@ public class JobSchedulerService extends JobService {
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//                        Single Block
+//                        if(appsManager.getPreferences(MyApp.getAppContext(),KEY_TEXT)!=null){
+//                            if(topPackageName.contentEquals(appsManager.getPreferences(MyApp.getAppContext(),KEY_TEXT))) {
+//                                Toast.makeText(this, "App BlockApp SARRY", Toast.LENGTH_SHORT).show();
+//                                Intent intent = new Intent(JobSchedulerService.this, LockActivity.class);
+//                                intent.putExtra(KEY_TEXT,appsManager.getPreferences(MyApp.getAppContext(),KEY_TEXT));
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                startActivity(intent);
+//                            }
 
 //WORKING DO NOT DELETE
 //                        if(!topPackageName.contentEquals("com.prototype.project.testrun66") && !topPackageName.contentEquals("com.bbk.launcher2") ){

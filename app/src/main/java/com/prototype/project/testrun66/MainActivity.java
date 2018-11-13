@@ -26,6 +26,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static  final  String TAG = "MainActivity";
+    private static final String KEY_TEXT_ARRAYLIST = "ARRAYLIST ";
     private PackageData packageData = new PackageData();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -67,7 +68,11 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    public void blockApp(View v) { blockApp.startJob();}
+    public void blockApp(View v) {
+        blockApp.startJob();
+
+
+    }
 
     @Override
     protected void onStart() { super.onStart(); Log.d(TAG, "onStart: App Started"); }

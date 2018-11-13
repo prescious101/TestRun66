@@ -5,12 +5,14 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.prototype.project.testrun66.Service.JobSchedulerService;
 
 import static android.content.Context.JOB_SCHEDULER_SERVICE;
 
 public class BlockApp {
+
     private static final String TAG = "BlockApp";
 
     public void startJob(){
@@ -29,6 +31,7 @@ public class BlockApp {
 
         if (resultcode == JobScheduler.RESULT_SUCCESS){
             Log.d(TAG, "Job Success... Job scheduled");
+            Toast.makeText(MyApp.getAppContext(), "Success", Toast.LENGTH_SHORT).show();
         }else {
             Log.d(TAG, "Job Failed... Job not scheduled ");
         }
@@ -38,7 +41,4 @@ public class BlockApp {
         final JobScheduler jobScheduler = (JobScheduler) context.getSystemService( Context.JOB_SCHEDULER_SERVICE );
         return jobScheduler.getAllPendingJobs().size() > 0;
     }
-
-
-
 }
