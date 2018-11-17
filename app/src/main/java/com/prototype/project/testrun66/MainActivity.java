@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void blockApp(View v) {
         blockApp.startJob();
-
-
     }
 
     @Override

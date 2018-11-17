@@ -8,7 +8,12 @@ public class PackageData  {
     private Drawable appIcon;
     private boolean isSelected;
 
-    public PackageData() { }
+    public PackageData() {
+    }
+
+    public PackageData(String packageName) {
+        this.packageName = packageName;
+    }
 
     public String getAppName() { return appName; }
 

@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,11 +25,12 @@ import java.util.List;
 
 public class AppsManager {
 
-
+    private static final String TAG = "AppsManager";
     private static final String SHARED_PREF = "SharedPreference";
     private static final String KEY_TEXT_ARRAYLIST = "ARRAYLIST ";
     private Context mContext;
     private ArrayList<PackageData> myApps;
+    private  PackageData packageData;
 
     public AppsManager() { }
 
@@ -95,16 +97,21 @@ public class AppsManager {
     }
 
     public void addAppToBlock(String blockApp){
+        packageData = new PackageData();
         ArrayList<String> blackList = new ArrayList<String>();
         blackList.add(blockApp);
         saveArrayList(blackList,KEY_TEXT_ARRAYLIST);
     }
 
     public void saveArrayList(ArrayList<String> list, String key){
+        if(list.contains(null)){
+            Toast.makeText(mContext, "NULL", Toast.LENGTH_SHORT).show();
+        }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyApp.getAppContext());
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(list);
+        Log.i(TAG, "saveArrayList: "+list.toString());
         editor.putString(key, json);
         editor.apply();     // This line is IMPORTANT !!!
     }

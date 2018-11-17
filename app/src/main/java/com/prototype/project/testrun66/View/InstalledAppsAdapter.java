@@ -1,7 +1,6 @@
 package com.prototype.project.testrun66.View;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,8 +13,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.prototype.project.testrun66.Model.AppsManager;
-import com.prototype.project.testrun66.Model.MyApp;
+import com.prototype.project.testrun66.Model.BlockApp;
 import com.prototype.project.testrun66.Model.PackageData;
 import com.prototype.project.testrun66.R;
 
@@ -24,13 +24,15 @@ import java.util.List;
 
 public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdapter.ViewHolder>{
 
+    private static final String KEY_TEXT_ARRAYLIST = "ARRAYLIST ";
     private static final String TAG = "AddedtoArrayList";
-    private static final String KEY_TEXT = "TEXT";
     private Context mContext;
     private List<PackageData> mDataSet;
-    private ArrayList<PackageData> mDataSet2 = new ArrayList<>();
-    private AppsManager appsManager = new AppsManager();
-    SharedPreferences prefs;
+    private ArrayList<String> mDataSet2 = new ArrayList<>();
+    private ArrayList<String> mDataSet3 = new ArrayList<>();
+    private AppsManager appsManager ;
+    private BlockApp blockApp = new BlockApp();
+
 
     public InstalledAppsAdapter(Context context, List<PackageData> list) {
         mContext = context;
@@ -41,6 +43,7 @@ public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdap
     public InstalledAppsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.main_applist, parent, false);
         ViewHolder vh = new ViewHolder(v);
+
         return vh;
     }
 
@@ -60,12 +63,28 @@ public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdap
             public void onClick(View v) {
                 mDataSet.get(position).setSelected(!mDataSet.get(position).isSelected());
                 InstalledAppsAdapter.this.notifyDataSetChanged();
-                appsManager.setPreferences(MyApp.getAppContext(), KEY_TEXT, packageName);
-                appsManager.addAppToBlock(packageName);
-//                Toast.makeText(mContext.getApplicationContext(), "package name: " + appsManager.getPreferences(MyApp.getAppContext(), KEY_TEXT) +
-//                        " save to shared pref", Toast.LENGTH_SHORT).show();
+                appsManager = new AppsManager();
+                if(mDataSet2.contains(null)){
+                    mDataSet2.add("Init");
+                }else if(!mDataSet2.contains(packageName) && !mDataSet2.contains("Init")) {
+                    mDataSet2.add(packageName);
+                }else
+                    Toast.makeText(mContext, "Already in Arraylist", Toast.LENGTH_SHORT).show();
+
+                appsManager.saveArrayList(mDataSet2, KEY_TEXT_ARRAYLIST);
+                mDataSet3 = appsManager.getArrayList(KEY_TEXT_ARRAYLIST);
+                Log.i(TAG, "onClick: "+mDataSet3.toString());
             }
-        });
+    });
+
+//        mButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(mContext,"Button Click", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+
     }
 
     @Override
@@ -77,6 +96,7 @@ public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdap
         public ImageView mImageViewIcon;
         public CheckBox mAppSelect;
         public RelativeLayout mItem;
+
 
         public ViewHolder(View v) {
             super(v);

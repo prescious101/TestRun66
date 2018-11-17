@@ -7,8 +7,6 @@ import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
@@ -17,10 +15,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
 import com.prototype.project.testrun66.LockActivity;
 import com.prototype.project.testrun66.Model.AppsManager;
-import com.prototype.project.testrun66.Model.MyApp;
 import com.prototype.project.testrun66.Model.PackageData;
 
 import java.util.ArrayList;
@@ -32,11 +28,12 @@ public class JobSchedulerService extends JobService {
 
     private static final String TAG = "JobScheduleService";
     private static final String SHARED_PREF = "SharedPreference";
-    private static final String KEY_TEXT_ARRAYLIST = "ARRAYLIST";
+    private static final String KEY_TEXT_ARRAYLIST = "ARRAYLIST ";
 
     PackageData packageData = new PackageData();
     AppsManager appsManager = new AppsManager();
     private Handler mHandler = new Handler(Looper.getMainLooper());
+    private ArrayList<String> blacklistedApps = new ArrayList<>();
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
@@ -78,7 +75,6 @@ public class JobSchedulerService extends JobService {
                         topPackageName = mySortedMap.get(mySortedMap.lastKey()).getPackageName();
                         packageData.setPackageName(topPackageName);
                         Log.e("TopPackage Name", topPackageName);
-//                        Toast.makeText(this, packageData.getPackageName(), Toast.LENGTH_SHORT).show();
                         {
                             Log.d(TAG, "getTopActivityFromLolipopOnwards: " + packageData);
                         }
@@ -88,17 +84,15 @@ public class JobSchedulerService extends JobService {
                             String name = prefs.getString("name", "No name defined");//"No name defined" is the default value.
                         }
 
-                        ArrayList<String> blacklistedApps = appsManager.getArrayList(KEY_TEXT_ARRAYLIST);
-                        if (blacklistedApps != null) {
-                                if (blacklistedApps.contains(topPackageName)) {
-                                    Toast.makeText(this, "App BlockApp SARRY", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(JobSchedulerService.this, LockActivity.class);
-                                    intent.putExtra(KEY_TEXT_ARRAYLIST, appsManager.getPreferences(MyApp.getAppContext(), KEY_TEXT_ARRAYLIST));
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
+                        blacklistedApps = appsManager.getArrayList(KEY_TEXT_ARRAYLIST);
+                            if (blacklistedApps.contains(topPackageName)) {
+
+                                Toast.makeText(this, "App BlockApp SARRY", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(JobSchedulerService.this, LockActivity.class);
+                                intent.putExtra(KEY_TEXT_ARRAYLIST,topPackageName);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
                             }
-                        } else
-                            Log.d(TAG, "getTopActivityFromLolipopOnwards: NULL");
                     }
                 }
             }

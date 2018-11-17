@@ -14,6 +14,7 @@ public class LockActivity extends Activity {
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_lockapp);
 
         String retrieveData = getIntent().getStringExtra(KEY_TEXT_ARRAYLIST);
         ActivityManager activityManager = (ActivityManager)getApplicationContext().getSystemService(MyApp.getAppContext().ACTIVITY_SERVICE);
